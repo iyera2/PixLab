@@ -6,6 +6,8 @@ import java.text.*;
 import java.util.*;
 import java.util.List; // resolves problem with java.awt.List and java.util.List
 
+import org.graalvm.compiler.nodes.calc.RightShiftNode;
+
 /**
  * A class that represents a picture. This class inherits from SimplePicture and
  * allows the student to add functionality to the Picture class.
@@ -333,6 +335,40 @@ public class Picture extends SimplePicture {
 					leftPixel.setColor(Color.BLACK);
 				else
 					leftPixel.setColor(Color.WHITE);
+			}
+		}
+	}
+
+	public void edgeDetection2(int edgeDist){
+		Picture copy = new Picture(this);
+		Pixel leftPixel = null;
+		Pixel rightPixel = null;
+		Pixel[][] pixels = this.getPixels2D();
+		Color rightColor = null;
+		for(int row = 0; row < pixels.length; row++){
+			for(int col = 0; col < pixels[0].length -1;col++){
+				leftPixel = pixels[row][col];
+				rightPixel = pixels[row][col+1];
+				rightColor = rightPixel.getColor();			
+				if(leftPixel.colorDistance(rightColor) > edgeDist){
+					leftPixel.setColor(Color.BLACK);
+				} else {
+					leftPixel.setColor(Color.WHITE);
+				}
+			}
+		}
+		Pixel[][] copyPixels = copy.getPixels2D();
+		Pixel topPixel = null;
+		Pixel bottomPixel = null;
+		Color bottomColor = null;
+		for(int row = 0; row < copyPixels.length-1;row++){
+			for(int col = 0; col < copyPixels[0].length; col++){
+				topPixel = copyPixels[row][col];
+				bottomPixel = copyPixels[row+1][col];
+				bottomColor = bottomPixel.getColor();
+				if(topPixel.colorDistance(bottomColor) > edgeDist){
+					pixels[row][col].setColor(Color.BLACK);
+				}
 			}
 		}
 	}
