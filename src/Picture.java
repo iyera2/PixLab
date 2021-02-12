@@ -95,6 +95,19 @@ public class Picture extends SimplePicture {
 		}
 	}
 
+	public void negate() {
+		Pixel[][] picGrid = this.getPixels2D();
+		Pixel current = null;
+		for( int row = 0; row < picGrid.length; row++ ) {
+			for( int col = 0; col < picGrid[0].length; col++ ) {
+				current = picGrid[ row ][ col ];
+				current.setRed( 255 - current.getRed() );
+				current.setGreen( 255 - current.getGreen() );
+				current.setBlue( 255 - current.getBlue() );
+			}
+		}
+	}
+
 	/**
 	 * Method that mirrors the picture around a vertical mirror in the center of
 	 * the picture from left to right
@@ -257,6 +270,22 @@ public class Picture extends SimplePicture {
 		}
 	}
 
+	public void copy2(Picture fromPic, int fromStartRow, int fromStartCol, int fromEndRow, int fromEndCol, int toStartRow, int toStartEnd){
+		Pixel fromPixel = null;
+		Pixel toPixel = null;
+		Pixel[][] toPixels = this.getPixels2D();
+		Pixel[][] fromPixels = fromPic.getPixels2D();
+		for (int fromRow = fromStartRow, toRow = fromStartRow; fromRow <= fromEndRow &&
+		toRow < toPixels.length; fromRow++, toRow++) {
+			for (int fromCol = fromStartCol, toCol = fromStartCol; fromCol <= fromEndCol && 
+			toCol < toPixels[0].length; fromCol++, toCol++) {
+				fromPixel = fromPixels[fromRow][fromCol];
+				toPixel = toPixels[toRow][toCol];
+				toPixel.setColor(fromPixel.getColor());
+			}
+		}
+	}
+
 	/** Method to create a collage of several pictures */
 	public void createCollage() {
 		Picture flower1 = new Picture("flower1.jpg");
@@ -271,6 +300,17 @@ public class Picture extends SimplePicture {
 		this.copy(flower2, 500, 0);
 		this.mirrorVertical();
 		this.write("collage.jpg");
+	}
+
+	public void myCollage(){
+		Picture gull = new Picture("seagull.jpg");
+		Picture flower1 = new Picture("flower1.jpg");
+		Picture beach = new Picture("beach.jpg");
+		gull.negate();
+		flower1.negate();
+		beach.negate();
+		this.copy(gull, 0, 0);
+		this.mirrorHorizontal();
 	}
 
 	/**
